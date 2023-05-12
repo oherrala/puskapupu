@@ -1,0 +1,28 @@
+[package]
+name = "puskapupu"
+version = "0.1.0"
+authors = [ "Ossi Herrala — OH8HUB <oherrala@iki.fi>" ]
+license = "ISC"
+edition = "2021"
+rust-version = "1.69"
+
+description = "A Matrix bot helping ham radio operators hunt On The Air activators"
+repository = "https://github.com/oherrala/puskapupu/"
+
+[dependencies]
+anyhow = "1"
+argh = "0.1"
+chumsky = "0.9"
+futures = "0.3"
+matrix-sdk = { version = "0.6", default_features = false, features = [ "rustls-tls" ] }
+rand = "0.8"
+serde = { version = "1", features = [ "derive" ] }
+tokio = { version = "1", features = [ "full" ] }
+toml = "0.7"
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = [ "fmt" ] }
+url = { version = "2", features = [ "serde" ] }
+
+[profile.release]
+lto = true
+codegen-units = 1
