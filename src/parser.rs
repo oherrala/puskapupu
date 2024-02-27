@@ -1,7 +1,6 @@
 use std::str::FromStr;
 
 use chumsky::prelude::*;
-use chumsky::Parser;
 
 #[derive(Debug)]
 pub struct DxEntry {
