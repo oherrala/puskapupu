@@ -1,7 +1,6 @@
 use std::path::PathBuf;
 
 use argh::FromArgs;
-use futures::TryStreamExt;
 
 use puskapupu::{config, cqgma, matrix};
 
@@ -19,7 +18,7 @@ async fn main() -> anyhow::Result<()> {
     let cli: Cli = argh::from_env();
 
     let config = config::Config::read_from_file(cli.config)?;
-    let mut fut = futures::stream::FuturesUnordered::new();
+    let mut fut = Vec::new();
 
     tracing::info!("Staring CQGMA stuff...");
     let cqgma_state = cqgma::cqgma_init(&config.cqgma).await;
@@ -29,10 +28,13 @@ async fn main() -> anyhow::Result<()> {
     let handles = matrix::matrix_init(&config.matrix, cqgma_state.telnet_rx).await?;
     fut.extend(handles);
 
-    while let Some(err) = fut.try_next().await? {
-        tracing::error!("Spawned task died with {err:?}");
-        panic!("A task has failed. Now we are in unknown state so we just quit.");
+    loop {
+        for handle in &fut {
+            if handle.is_finished() {
+                tracing::error!("Task {handle:?} has finished. This is error. Exiting.");
+                panic!("Task {handle:?} has finished. This is error. Exiting.");
+            }
+        }
+        tokio::time::sleep(std::time::Duration::from_secs(1)).await;
     }
-
-    Ok(())
 }
