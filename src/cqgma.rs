@@ -198,13 +198,7 @@ fn line_filter(line: &str) -> bool {
 
 /// This provides [Duration] between [17, 34] seconds.
 fn rand_sleep() -> Duration {
-    use rand::distributions::Uniform;
-    use rand::{thread_rng, Rng};
-
-    const TIMEOUT: Duration = Duration::from_secs(17);
-    let timeout_fuzz: Uniform<Duration> = Uniform::new_inclusive(Duration::from_secs(0), TIMEOUT);
-
-    TIMEOUT + thread_rng().sample(timeout_fuzz)
+    rand::random_range(Duration::from_secs(17)..=Duration::from_secs(34))
 }
 
 #[cfg(test)]
