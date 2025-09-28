@@ -1,8 +1,9 @@
 use std::io;
 
 use futures::stream::StreamExt;
+use matrix_sdk::authentication::matrix::MatrixSession;
+use matrix_sdk::authentication::SessionTokens;
 use matrix_sdk::config::SyncSettings;
-use matrix_sdk::matrix_auth::{MatrixSession, MatrixSessionTokens};
 use matrix_sdk::ruma::events::room::message::RoomMessageEventContent;
 use matrix_sdk::{Client, SessionMeta};
 use tokio::sync::mpsc::UnboundedReceiver;
@@ -23,7 +24,7 @@ pub async fn matrix_init(
             user_id: config.user_id.to_owned(),
             device_id: config.device_id.to_owned(),
         },
-        tokens: MatrixSessionTokens {
+        tokens: SessionTokens {
             access_token: config.access_token.to_owned(),
             refresh_token: None,
         },
